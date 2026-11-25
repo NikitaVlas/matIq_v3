@@ -18,7 +18,9 @@
     "services:logs": "docker compose logs -f",
     "db:generate": "pnpm --filter @matiq/db db:generate",
     "db:migrate": "pnpm --filter @matiq/db db:migrate",
-    "db:studio": "pnpm --filter @matiq/db db:studio"
+    "db:studio": "pnpm --filter @matiq/db db:studio",
+    "db:seed": "pnpm --filter @matiq/roadmap build && pnpm --filter @matiq/db db:seed",
+    "db:seed:demo": "pnpm --filter @matiq/roadmap build && pnpm --filter @matiq/db db:seed:demo"
   },
   "devDependencies": {
     "@matiq/config": "workspace:*",
