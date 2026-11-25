@@ -6,7 +6,8 @@ the owner commits every step. Status is updated at the end of each step.
 ## Architecture
 
 - `apps/api` — NestJS 12 (ESM), the only app that talks to the database (Better Auth, Bunny, Stripe, mail)
-- `apps/web` — Next.js, user app (mobile-first): assessment, roadmap, categories, courses, instructor pages
+- `apps/web` — Next.js 16, user app (mobile-first): assessment, roadmap, categories, courses, instructor pages.
+  German routes (`/kategorien`, `/impressum`, …); all UI text in `src/i18n/de.ts`; legal texts in `content/legal/*.md`
 - `apps/admin` — Vite + React SPA, admin only
 - `packages/config` — shared tsconfig / eslint / prettier
 - `packages/db` — Drizzle schema, migrations, seed
@@ -40,7 +41,7 @@ Infra: Postgres 18 + Mailpit via docker-compose locally; Hetzner VPS + Coolify i
 | 4   | `packages/roadmap/graph`: cycle detection, topological sort, tests                                                        | done   |
 | 5   | Seed: 35 categories + links (validated acyclic), dev-only demo seed                                                       | done   |
 | 6   | `apps/api` (NestJS): env validation, DB module, `/health`, logging, error format, `GET /categories`; `packages/contracts` | done   |
-| 7   | `apps/web` (Next.js): `de.ts`, mobile-first layout, Impressum/Datenschutz/AGB from `content/legal/*.md`, categories page  |        |
+| 7   | `apps/web` (Next.js): `de.ts`, mobile-first layout, Impressum/Datenschutz/AGB from `content/legal/*.md`, categories page  | done   |
 | 8   | `apps/admin` (Vite + React): layout, read-only categories and links table                                                 |        |
 | 9   | Dockerfiles for api/web/admin (multi-stage) + full-stack compose profile                                                  |        |
 | 10  | README: local setup, commands, structure                                                                                  |        |
