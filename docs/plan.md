@@ -5,13 +5,13 @@ the owner commits every step. Status is updated at the end of each step.
 
 ## Architecture
 
-- `apps/api` — NestJS, the only app that talks to the database (Better Auth, Bunny, Stripe, mail)
+- `apps/api` — NestJS 12 (ESM), the only app that talks to the database (Better Auth, Bunny, Stripe, mail)
 - `apps/web` — Next.js, user app (mobile-first): assessment, roadmap, categories, courses, instructor pages
 - `apps/admin` — Vite + React SPA, admin only
 - `packages/config` — shared tsconfig / eslint / prettier
 - `packages/db` — Drizzle schema, migrations, seed
 - `packages/roadmap` — pure roadmap engine and graph utils (Vitest)
-- `packages/contracts` — zod schemas shared by api and frontends (from step 6)
+- `packages/contracts` — zod schemas, error codes and enum values shared by db, api and frontends
 - `packages/mail` — mail abstraction: Mailpit locally, Brevo in production (phase 2)
 
 Infra: Postgres 18 + Mailpit via docker-compose locally; Hetzner VPS + Coolify in production.
@@ -20,7 +20,8 @@ Infra: Postgres 18 + Mailpit via docker-compose locally; Hetzner VPS + Coolify i
 
 - **Categories** ("Kategorien") are 35 flat, independent navigation sections. Names stay English
   (common in German BJJ) except `Kondition` and `Krafttraining`. A category is visible in the app
-  only once it has published videos.
+  only once it has published videos (until videos exist in phase 3, `GET /categories` returns all
+  non-hidden categories).
 - **Category links**: `learn_before` (strict order for the roadmap, must stay acyclic) and
   `leads_to` (what follows in a match, cycles allowed).
 - **Positions / techniques** are the internal model for the roadmap engine and assessment; they
@@ -38,7 +39,7 @@ Infra: Postgres 18 + Mailpit via docker-compose locally; Hetzner VPS + Coolify i
 | 3   | `packages/db`: schema (categories, links, positions, techniques, …) + first migration                                     | done   |
 | 4   | `packages/roadmap/graph`: cycle detection, topological sort, tests                                                        | done   |
 | 5   | Seed: 35 categories + links (validated acyclic), dev-only demo seed                                                       | done   |
-| 6   | `apps/api` (NestJS): env validation, DB module, `/health`, logging, error format, `GET /categories`; `packages/contracts` |        |
+| 6   | `apps/api` (NestJS): env validation, DB module, `/health`, logging, error format, `GET /categories`; `packages/contracts` | done   |
 | 7   | `apps/web` (Next.js): `de.ts`, mobile-first layout, Impressum/Datenschutz/AGB from `content/legal/*.md`, categories page  |        |
 | 8   | `apps/admin` (Vite + React): layout, read-only categories and links table                                                 |        |
 | 9   | Dockerfiles for api/web/admin (multi-stage) + full-stack compose profile                                                  |        |

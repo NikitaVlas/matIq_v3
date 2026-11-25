@@ -1,0 +1,20 @@
+{
+  "extends": "@matiq/config/tsconfig/base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "verbatimModuleSyntax": true,
+    // NestJS dependency injection relies on legacy decorators + metadata.
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    // Same import style as the packages: relative imports end in .ts,
+    // tsc rewrites them to .js in the build output.
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "types": ["node"],
+    "outDir": "dist",
+    "sourceMap": true,
+    "noEmit": true
+  },
+  "include": ["src", "test", "vitest.config.ts", "vitest.e2e.config.ts"]
+}
