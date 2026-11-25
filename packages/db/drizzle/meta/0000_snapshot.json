@@ -1,0 +1,779 @@
+{
+  "id": "209c7bfd-179a-448e-b0f8-039dad770eca",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.categories": {
+      "name": "categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_de": {
+          "name": "name_de",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description_de": {
+          "name": "description_de",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "category_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "is_hidden": {
+          "name": "is_hidden",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "categories_slug_unique": {
+          "name": "categories_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.category_links": {
+      "name": "category_links",
+      "schema": "",
+      "columns": {
+        "from_category_id": {
+          "name": "from_category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "to_category_id": {
+          "name": "to_category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "category_link_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "category_links_to_idx": {
+          "name": "category_links_to_idx",
+          "columns": [
+            {
+              "expression": "to_category_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "category_links_from_category_id_categories_id_fk": {
+          "name": "category_links_from_category_id_categories_id_fk",
+          "tableFrom": "category_links",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "from_category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "category_links_to_category_id_categories_id_fk": {
+          "name": "category_links_to_category_id_categories_id_fk",
+          "tableFrom": "category_links",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "to_category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "category_links_from_category_id_to_category_id_kind_pk": {
+          "name": "category_links_from_category_id_to_category_id_kind_pk",
+          "columns": [
+            "from_category_id",
+            "to_category_id",
+            "kind"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "category_links_no_self_link": {
+          "name": "category_links_no_self_link",
+          "value": "\"category_links\".\"from_category_id\" <> \"category_links\".\"to_category_id\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.positions": {
+      "name": "positions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_de": {
+          "name": "name_de",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "positions_parent_idx": {
+          "name": "positions_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "positions_parent_id_positions_id_fk": {
+          "name": "positions_parent_id_positions_id_fk",
+          "tableFrom": "positions",
+          "tableTo": "positions",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "positions_slug_unique": {
+          "name": "positions_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.technique_categories": {
+      "name": "technique_categories",
+      "schema": "",
+      "columns": {
+        "technique_id": {
+          "name": "technique_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "technique_categories_category_idx": {
+          "name": "technique_categories_category_idx",
+          "columns": [
+            {
+              "expression": "category_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "technique_categories_technique_id_techniques_id_fk": {
+          "name": "technique_categories_technique_id_techniques_id_fk",
+          "tableFrom": "technique_categories",
+          "tableTo": "techniques",
+          "columnsFrom": [
+            "technique_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "technique_categories_category_id_categories_id_fk": {
+          "name": "technique_categories_category_id_categories_id_fk",
+          "tableFrom": "technique_categories",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "technique_categories_technique_id_category_id_pk": {
+          "name": "technique_categories_technique_id_category_id_pk",
+          "columns": [
+            "technique_id",
+            "category_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.technique_links": {
+      "name": "technique_links",
+      "schema": "",
+      "columns": {
+        "from_technique_id": {
+          "name": "from_technique_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "to_technique_id": {
+          "name": "to_technique_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "technique_link_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "technique_links_to_idx": {
+          "name": "technique_links_to_idx",
+          "columns": [
+            {
+              "expression": "to_technique_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "technique_links_from_technique_id_techniques_id_fk": {
+          "name": "technique_links_from_technique_id_techniques_id_fk",
+          "tableFrom": "technique_links",
+          "tableTo": "techniques",
+          "columnsFrom": [
+            "from_technique_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "technique_links_to_technique_id_techniques_id_fk": {
+          "name": "technique_links_to_technique_id_techniques_id_fk",
+          "tableFrom": "technique_links",
+          "tableTo": "techniques",
+          "columnsFrom": [
+            "to_technique_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "technique_links_from_technique_id_to_technique_id_kind_pk": {
+          "name": "technique_links_from_technique_id_to_technique_id_kind_pk",
+          "columns": [
+            "from_technique_id",
+            "to_technique_id",
+            "kind"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "technique_links_no_self": {
+          "name": "technique_links_no_self",
+          "value": "\"technique_links\".\"from_technique_id\" <> \"technique_links\".\"to_technique_id\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.technique_prerequisites": {
+      "name": "technique_prerequisites",
+      "schema": "",
+      "columns": {
+        "technique_id": {
+          "name": "technique_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "requires_technique_id": {
+          "name": "requires_technique_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "technique_prerequisites_requires_idx": {
+          "name": "technique_prerequisites_requires_idx",
+          "columns": [
+            {
+              "expression": "requires_technique_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "technique_prerequisites_technique_id_techniques_id_fk": {
+          "name": "technique_prerequisites_technique_id_techniques_id_fk",
+          "tableFrom": "technique_prerequisites",
+          "tableTo": "techniques",
+          "columnsFrom": [
+            "technique_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "technique_prerequisites_requires_technique_id_techniques_id_fk": {
+          "name": "technique_prerequisites_requires_technique_id_techniques_id_fk",
+          "tableFrom": "technique_prerequisites",
+          "tableTo": "techniques",
+          "columnsFrom": [
+            "requires_technique_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "technique_prerequisites_technique_id_requires_technique_id_pk": {
+          "name": "technique_prerequisites_technique_id_requires_technique_id_pk",
+          "columns": [
+            "technique_id",
+            "requires_technique_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "technique_prerequisites_no_self": {
+          "name": "technique_prerequisites_no_self",
+          "value": "\"technique_prerequisites\".\"technique_id\" <> \"technique_prerequisites\".\"requires_technique_id\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.techniques": {
+      "name": "techniques",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_de": {
+          "name": "name_de",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position_id": {
+          "name": "position_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "perspective": {
+          "name": "perspective",
+          "type": "technique_perspective",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "technique_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "level": {
+          "name": "level",
+          "type": "skill_level",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gi_mode": {
+          "name": "gi_mode",
+          "type": "gi_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'both'"
+        },
+        "is_scoring": {
+          "name": "is_scoring",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "description_de": {
+          "name": "description_de",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "techniques_position_idx": {
+          "name": "techniques_position_idx",
+          "columns": [
+            {
+              "expression": "position_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "techniques_position_id_positions_id_fk": {
+          "name": "techniques_position_id_positions_id_fk",
+          "tableFrom": "techniques",
+          "tableTo": "positions",
+          "columnsFrom": [
+            "position_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "techniques_slug_unique": {
+          "name": "techniques_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.category_kind": {
+      "name": "category_kind",
+      "schema": "public",
+      "values": [
+        "position",
+        "technique_type",
+        "training"
+      ]
+    },
+    "public.category_link_kind": {
+      "name": "category_link_kind",
+      "schema": "public",
+      "values": [
+        "learn_before",
+        "leads_to"
+      ]
+    },
+    "public.gi_mode": {
+      "name": "gi_mode",
+      "schema": "public",
+      "values": [
+        "gi",
+        "nogi",
+        "both"
+      ]
+    },
+    "public.skill_level": {
+      "name": "skill_level",
+      "schema": "public",
+      "values": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ]
+    },
+    "public.technique_link_kind": {
+      "name": "technique_link_kind",
+      "schema": "public",
+      "values": [
+        "setup_for",
+        "chain",
+        "counter"
+      ]
+    },
+    "public.technique_perspective": {
+      "name": "technique_perspective",
+      "schema": "public",
+      "values": [
+        "top",
+        "bottom",
+        "neutral"
+      ]
+    },
+    "public.technique_type": {
+      "name": "technique_type",
+      "schema": "public",
+      "values": [
+        "submission",
+        "sweep",
+        "pass",
+        "escape",
+        "takedown",
+        "transition",
+        "retention",
+        "control",
+        "concept"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

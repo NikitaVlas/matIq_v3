@@ -12,12 +12,18 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "services:up": "docker compose up -d --wait",
+    "services:down": "docker compose down",
+    "services:logs": "docker compose logs -f",
+    "db:generate": "pnpm --filter @matiq/db db:generate",
+    "db:migrate": "pnpm --filter @matiq/db db:migrate",
+    "db:studio": "pnpm --filter @matiq/db db:studio"
   },
   "devDependencies": {
     "@matiq/config": "workspace:*",
     "prettier": "^3.10.1",
     "turbo": "^2.11.13",
-    "typescript": "^6.0.3"
+    "typescript": "~6.0.3"
   }
 }

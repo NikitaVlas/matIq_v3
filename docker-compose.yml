@@ -1,0 +1,34 @@
+# Local development services. Apps themselves run on the host via `pnpm dev`.
+# Values come from the root .env file (copy .env.example to .env).
+name: matiq
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-matiq}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-matiq}
+      POSTGRES_DB: ${POSTGRES_DB:-matiq}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Postgres 18 images keep data under /var/lib/postgresql/<major>/docker,
+      # so the volume is mounted one level up.
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Catches all outgoing mail locally. Web UI: http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:v1.34.0
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_SMTP_PORT:-1025}:1025"
+      - "${MAILPIT_UI_PORT:-8025}:8025"
+
+volumes:
+  postgres-data:

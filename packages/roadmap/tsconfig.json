@@ -1,0 +1,13 @@
+{
+  "extends": "@matiq/config/tsconfig/library.json",
+  "compilerOptions": {
+    // tsup builds the package; tsc only type-checks.
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    // Pure logic: no Node or DOM APIs on purpose.
+    "types": []
+  },
+  "include": ["src", "tsup.config.ts", "vitest.config.ts"]
+}
