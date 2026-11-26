@@ -49,7 +49,7 @@ The API image also runs `node dist/cli/migrate.js` (before every deploy) and `no
 | 7   | `apps/web` (Next.js): `de.ts`, mobile-first layout, Impressum/Datenschutz/AGB from `content/legal/*.md`, categories page  | done   |
 | 8   | `apps/admin` (Vite + React): layout, read-only categories and links table                                                 | done   |
 | 9   | Dockerfiles for api/web/admin (multi-stage) + full-stack compose profile                                                  | done   |
-| 10  | README: local setup, commands, structure                                                                                  |        |
+| 10  | README: local setup, commands, structure                                                                                  | done   |
 
 ## Later phases
 
