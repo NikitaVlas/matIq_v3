@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/* Neutral placeholder theme until the Figma design lands. */
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-accent: oklch(0.62 0.17 250);
+}
