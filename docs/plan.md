@@ -18,6 +18,9 @@ the owner commits every step. Status is updated at the end of each step.
 - `packages/mail` — mail abstraction: Mailpit locally, Brevo in production (phase 2)
 
 Infra: Postgres 18 + Mailpit via docker-compose locally; Hetzner VPS + Coolify in production.
+Each app has a multi-stage Dockerfile (`apps/*/Dockerfile`, build context = repo root, `turbo prune`).
+The API image also runs `node dist/cli/migrate.js` (before every deploy) and `node dist/cli/seed.js`.
+`pnpm stack:up` runs the whole stack locally with the production images (compose profile `full`).
 
 ## Domain decisions
 
@@ -45,7 +48,7 @@ Infra: Postgres 18 + Mailpit via docker-compose locally; Hetzner VPS + Coolify i
 | 6   | `apps/api` (NestJS): env validation, DB module, `/health`, logging, error format, `GET /categories`; `packages/contracts` | done   |
 | 7   | `apps/web` (Next.js): `de.ts`, mobile-first layout, Impressum/Datenschutz/AGB from `content/legal/*.md`, categories page  | done   |
 | 8   | `apps/admin` (Vite + React): layout, read-only categories and links table                                                 | done   |
-| 9   | Dockerfiles for api/web/admin (multi-stage) + full-stack compose profile                                                  |        |
+| 9   | Dockerfiles for api/web/admin (multi-stage) + full-stack compose profile                                                  | done   |
 | 10  | README: local setup, commands, structure                                                                                  |        |
 
 ## Later phases

@@ -1,6 +1,23 @@
-# Local development services. Apps themselves run on the host via `pnpm dev`.
-# Values come from the root .env file (copy .env.example to .env).
+# Local services. Values come from the root .env file (copy .env.example to .env).
+#
+#   docker compose up -d                   Postgres + Mailpit only (apps run via `pnpm dev`)
+#   docker compose --profile full up -d    + api, web, admin as production-like containers
+#
+# The "full" profile mirrors the production images (same Dockerfiles as Coolify).
 name: matiq
+
+x-api-build: &api-build
+  build:
+    context: .
+    dockerfile: apps/api/Dockerfile
+  image: matiq-api:local
+
+x-api-env: &api-env
+  NODE_ENV: production
+  DATABASE_URL: postgres://${POSTGRES_USER:-matiq}:${POSTGRES_PASSWORD:-matiq}@postgres:5432/${POSTGRES_DB:-matiq}
+  WEB_URL: http://localhost:${WEB_HOST_PORT:-3000}
+  ADMIN_URL: http://localhost:${ADMIN_HOST_PORT:-5173}
+  LOG_LEVEL: ${LOG_LEVEL:-info}
 
 services:
   postgres:
@@ -29,6 +46,71 @@ services:
     ports:
       - "${MAILPIT_SMTP_PORT:-1025}:1025"
       - "${MAILPIT_UI_PORT:-8025}:8025"
+
+  # --- profile "full": production-like app containers --------------------
+
+  # One-off: apply DB migrations, then exit.
+  migrate:
+    <<: *api-build
+    profiles: ["full"]
+    command: ["node", "dist/cli/migrate.js"]
+    environment: *api-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # One-off: insert missing base categories (never overwrites), then exit.
+  seed:
+    <<: *api-build
+    profiles: ["full"]
+    command: ["node", "dist/cli/seed.js"]
+    environment: *api-env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  api:
+    <<: *api-build
+    profiles: ["full"]
+    restart: unless-stopped
+    environment: *api-env
+    ports:
+      - "${API_HOST_PORT:-4000}:4000"
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    image: matiq-web:local
+    profiles: ["full"]
+    restart: unless-stopped
+    environment:
+      # Server-side calls go over the internal Docker network.
+      API_URL: http://api:4000
+    ports:
+      - "${WEB_HOST_PORT:-3000}:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+      args:
+        # Called from the browser, so it must be the host-visible API URL.
+        VITE_API_URL: http://localhost:${API_HOST_PORT:-4000}
+    image: matiq-admin:local
+    profiles: ["full"]
+    restart: unless-stopped
+    ports:
+      - "${ADMIN_HOST_PORT:-5173}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
 
 volumes:
   postgres-data:

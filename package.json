@@ -16,11 +16,14 @@
     "services:up": "docker compose up -d --wait",
     "services:down": "docker compose down",
     "services:logs": "docker compose logs -f",
-    "db:generate": "pnpm --filter @matiq/db db:generate",
-    "db:migrate": "pnpm --filter @matiq/db db:migrate",
-    "db:studio": "pnpm --filter @matiq/db db:studio",
-    "db:seed": "pnpm --filter @matiq/roadmap build && pnpm --filter @matiq/db db:seed",
-    "db:seed:demo": "pnpm --filter @matiq/roadmap build && pnpm --filter @matiq/db db:seed:demo"
+    "stack:up": "docker compose --profile full up -d --build --wait",
+    "stack:down": "docker compose --profile full down",
+    "db:deps": "turbo run build --filter=@matiq/db^...",
+    "db:generate": "pnpm db:deps && pnpm --filter @matiq/db db:generate",
+    "db:migrate": "pnpm db:deps && pnpm --filter @matiq/db db:migrate",
+    "db:studio": "pnpm db:deps && pnpm --filter @matiq/db db:studio",
+    "db:seed": "pnpm db:deps && pnpm --filter @matiq/db db:seed",
+    "db:seed:demo": "pnpm db:deps && pnpm --filter @matiq/db db:seed:demo"
   },
   "devDependencies": {
     "@matiq/config": "workspace:*",

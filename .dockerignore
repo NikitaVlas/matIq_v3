@@ -1,0 +1,13 @@
+# Keep the Docker build context small and free of secrets.
+.git
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+**/*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.claude
+docs

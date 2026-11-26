@@ -9,7 +9,11 @@ export interface CreateDbOptions {
 
 /** Creates a Drizzle client. Callers own the lifecycle and must call `client.end()`. */
 export function createDb(databaseUrl: string, options: CreateDbOptions = {}) {
-  const client = postgres(databaseUrl, { max: options.max ?? 10 });
+  const client = postgres(databaseUrl, {
+    max: options.max ?? 10,
+    // Postgres NOTICEs ("already exists, skipping") are noise, not errors.
+    onnotice: () => {},
+  });
   const db = drizzle({ client, schema, casing: "snake_case" });
   return { db, client };
 }
