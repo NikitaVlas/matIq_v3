@@ -16,7 +16,7 @@ export interface CategorySeedResult {
  *
  * Idempotent and non-destructive: only inserts what is missing (matched by slug / link key).
  * Existing rows are never overwritten, so edits made later in the admin survive a re-run.
- * Used by `pnpm db:seed` locally and by the API image (`node dist/cli/seed.js`) in production.
+ * Part of seedBase (seed-base.ts).
  */
 export async function seedCategories(db: Database): Promise<CategorySeedResult> {
   return db.transaction(async (tx) => {
@@ -65,11 +65,4 @@ export async function seedCategories(db: Database): Promise<CategorySeedResult> 
       linksTotal: CATEGORY_LINK_SEED.length,
     };
   });
-}
-
-export function formatSeedResult(result: CategorySeedResult): string {
-  return (
-    `Seed done: ${result.categoriesInserted}/${result.categoriesTotal} categories and ` +
-    `${result.linksInserted}/${result.linksTotal} links inserted (rest already existed).`
-  );
 }

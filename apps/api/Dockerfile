@@ -4,7 +4,7 @@
 # Commands in the image:
 #   node dist/main.js          start the API (default)
 #   node dist/cli/migrate.js   apply DB migrations (run before each deploy)
-#   node dist/cli/seed.js      insert missing base categories (never overwrites)
+#   node dist/cli/seed.js      insert missing base data: categories, positions, techniques (never overwrites)
 
 FROM node:26-alpine AS base
 RUN npm install -g pnpm@10.11.0 turbo@2.11.13

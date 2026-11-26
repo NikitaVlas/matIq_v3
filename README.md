@@ -58,8 +58,7 @@ pnpm install
 cp .env.example .env          # PowerShell: Copy-Item .env.example .env
 pnpm services:up              # Postgres + Mailpit in Docker
 pnpm db:migrate               # create the tables
-pnpm db:seed                  # 35 categories and their links
-pnpm db:seed:demo             # optional: demo positions and techniques (dev only)
+pnpm db:seed                  # 35 categories + links, 8 positions, 46 base techniques
 pnpm dev                      # api, web and admin in watch mode
 ```
 
@@ -74,20 +73,20 @@ To run a single app: `pnpm --filter @matiq/api dev` (or `@matiq/web`, `@matiq/ad
 
 ### Commands
 
-| Command                                                | Does                                                                |
-| ------------------------------------------------------ | ------------------------------------------------------------------- |
-| `pnpm dev`                                             | Start all apps in watch mode                                        |
-| `pnpm build`                                           | Build all packages and apps                                         |
-| `pnpm lint` / `pnpm typecheck`                         | ESLint / TypeScript across the monorepo                             |
-| `pnpm test`                                            | All unit tests (no database needed)                                 |
-| `pnpm --filter @matiq/api test:e2e`                    | API end-to-end tests (needs `services:up`, `db:migrate`, `db:seed`) |
-| `pnpm format` / `pnpm format:check`                    | Prettier                                                            |
-| `pnpm services:up` / `services:down` / `services:logs` | Postgres + Mailpit                                                  |
-| `pnpm db:generate --name <change>`                     | Create a migration after changing `packages/db/src/schema`          |
-| `pnpm db:migrate`                                      | Apply pending migrations                                            |
-| `pnpm db:seed` / `db:seed:demo`                        | Insert missing base categories / demo content (never overwrites)    |
-| `pnpm db:studio`                                       | Drizzle Studio (browse the database)                                |
-| `pnpm stack:up` / `stack:down`                         | Whole stack as production-like containers (see below)               |
+| Command                                                | Does                                                                           |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `pnpm dev`                                             | Start all apps in watch mode                                                   |
+| `pnpm build`                                           | Build all packages and apps                                                    |
+| `pnpm lint` / `pnpm typecheck`                         | ESLint / TypeScript across the monorepo                                        |
+| `pnpm test`                                            | All unit tests (no database needed)                                            |
+| `pnpm --filter @matiq/api test:e2e`                    | API end-to-end tests (needs `services:up`, `db:migrate`, `db:seed`)            |
+| `pnpm format` / `pnpm format:check`                    | Prettier                                                                       |
+| `pnpm services:up` / `services:down` / `services:logs` | Postgres + Mailpit                                                             |
+| `pnpm db:generate --name <change>`                     | Create a migration after changing `packages/db/src/schema`                     |
+| `pnpm db:migrate`                                      | Apply pending migrations                                                       |
+| `pnpm db:seed`                                         | Insert missing base data: categories, positions, techniques (never overwrites) |
+| `pnpm db:studio`                                       | Drizzle Studio (browse the database)                                           |
+| `pnpm stack:up` / `stack:down`                         | Whole stack as production-like containers (see below)                          |
 
 ## Environment variables
 

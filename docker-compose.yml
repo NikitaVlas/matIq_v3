@@ -59,7 +59,7 @@ services:
       postgres:
         condition: service_healthy
 
-  # One-off: insert missing base categories (never overwrites), then exit.
+  # One-off: insert missing base data (categories, positions, techniques; never overwrites), then exit.
   seed:
     <<: *api-build
     profiles: ["full"]

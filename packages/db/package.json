@@ -31,7 +31,6 @@
     "db:migrate": "node src/migrate.ts",
     "db:studio": "drizzle-kit studio",
     "db:seed": "node src/seed/run.ts",
-    "db:seed:demo": "node src/seed/demo.ts",
     "test": "vitest run"
   },
   "dependencies": {

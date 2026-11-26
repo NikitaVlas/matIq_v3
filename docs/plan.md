@@ -30,8 +30,13 @@ The API image also runs `node dist/cli/migrate.js` (before every deploy) and `no
   non-hidden categories).
 - **Category links**: `learn_before` (strict order for the roadmap, must stay acyclic) and
   `leads_to` (what follows in a match, cycles allowed).
-- **Positions / techniques** are the internal model for the roadmap engine and assessment; they
-  are created in the admin. Videos link to techniques and categories (many-to-many).
+- **Positions / techniques** are the internal model for the roadmap engine and assessment. The
+  base seed has the 8 assessment positions and 46 owner-reviewed core techniques
+  (`packages/db/src/seed/data/`); further techniques (narrow guards like Spider, Lasso, X, SLX,
+  50/50, Z, Rubber, Lapel, RDLR) are created in the admin together with real videos. Videos link to
+  techniques and categories (many-to-many).
+- **Technique levels** are stored as `beginner` / `intermediate` / `advanced` and shown in the UI
+  as "Stufe 1 / 2 / 3". "Voraussetzungen" (prerequisites) must stay acyclic.
 - A video belongs to at most one course; an instructor publishes single videos or courses.
 - Roles: `admin` (only the owner, uses `apps/admin`), `instructor` (public page + own stats in
   `apps/web`), `user`.
@@ -58,7 +63,7 @@ The API image also runs `node dist/cli/migrate.js` (before every deploy) and `no
 | 2   | docker-compose (Postgres 18, Mailpit), `.env.example`                                                                     | done   |
 | 3   | `packages/db`: schema (categories, links, positions, techniques, …) + first migration                                     | done   |
 | 4   | `packages/roadmap/graph`: cycle detection, topological sort, tests                                                        | done   |
-| 5   | Seed: 35 categories + links (validated acyclic), dev-only demo seed                                                       | done   |
+| 5   | Seed: 35 categories + links (validated acyclic); demo seed later replaced by the phase 2 base seed                        | done   |
 | 6   | `apps/api` (NestJS): env validation, DB module, `/health`, logging, error format, `GET /categories`; `packages/contracts` | done   |
 | 7   | `apps/web` (Next.js): `de.ts`, mobile-first layout, Impressum/Datenschutz/AGB from `content/legal/*.md`, categories page  | done   |
 | 8   | `apps/admin` (Vite + React): layout, read-only categories and links table                                                 | done   |
@@ -67,15 +72,15 @@ The API image also runs `node dist/cli/migrate.js` (before every deploy) and `no
 
 ## Phase 2 — accounts + assessment
 
-| #   | Step                                                                                                                                   | Status |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | Base seed: the 8 assessment positions + ~30–40 core techniques (DE/EN, prerequisites, categories); list reviewed by owner first        |        |
-| 2   | `packages/mail`: provider interface, SMTP (Mailpit) + Brevo, German templates (verify email, reset password)                           |        |
-| 3   | Better Auth in the API: auth tables + roles, email/password with verification and reset, Google (enabled once env is set), rate limits |        |
-| 4   | Web auth pages: `/registrieren`, `/anmelden`, `/passwort-vergessen`, `/passwort-zuruecksetzen`, session in the header                  |        |
-| 5   | Admin protection: admin-only API guard, admin login, CLI to grant the first admin role                                                 |        |
-| 6   | Assessment backend: tables + migration, step schemas in contracts, `GET/PUT/POST /assessments/current…`, tests                         |        |
-| 7   | Assessment UI in web: 7 steps, guest draft in `localStorage`, sync after sign-in, summary                                              |        |
+| #   | Step                                                                                                                                    | Status |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | Base seed: the 8 assessment positions + 46 core techniques (DE/EN, prerequisites, categories), reviewed by the owner; demo seed removed | done   |
+| 2   | `packages/mail`: provider interface, SMTP (Mailpit) + Brevo, German templates (verify email, reset password)                            |        |
+| 3   | Better Auth in the API: auth tables + roles, email/password with verification and reset, Google (enabled once env is set), rate limits  |        |
+| 4   | Web auth pages: `/registrieren`, `/anmelden`, `/passwort-vergessen`, `/passwort-zuruecksetzen`, session in the header                   |        |
+| 5   | Admin protection: admin-only API guard, admin login, CLI to grant the first admin role                                                  |        |
+| 6   | Assessment backend: tables + migration, step schemas in contracts, `GET/PUT/POST /assessments/current…`, tests                          |        |
+| 7   | Assessment UI in web: 7 steps, guest draft in `localStorage`, sync after sign-in, summary                                               |        |
 
 Needed from the owner: Google OAuth client ID/secret (Google Cloud Console, free) before Google
 sign-in is switched on; a Brevo account before the first production deploy.
